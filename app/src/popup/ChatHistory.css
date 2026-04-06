@@ -1,0 +1,716 @@
+.chat-history {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 16px 12px;
+  width: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  position: relative;
+}
+/* Scrollbar invisible para el contenedor del historial (mantiene el scroll) */
+.chat-history {
+  scrollbar-width: none; /* Firefox */
+}
+.chat-history::-webkit-scrollbar {
+  width: 0px; /* Chrome/Safari/Edge */
+  height: 0px;
+}
+
+body.theme-black .chat-history,
+body.theme-black .history-drawer {
+  background: #151414 !important;
+}
+
+.chat-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #333;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.chat-history-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  color: white;
+  background: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  color: white;
+  background: #333;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+/* Workspaces */
+.workspaces-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.workspaces-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.create-btn {
+  background: #34e335;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.create-btn:hover {
+  background: #2bc02c;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+
+.empty-state p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+}
+
+/* Ajustar alineación de workspaces */
+.workspaces-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.workspace-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  width: 95%;
+  margin-left: 0;
+  overflow: hidden;
+}
+
+.workspace-item:hover {
+  background: #2a2a2a;
+}
+
+.workspace-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  margin-left: 0;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.workspace-header.active {
+  background: transparent;
+  border: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workspace-header.active .workspace-dot {
+  width: 6px;
+  height: 6px;
+  background: #34e335;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(52, 227, 53, 0.6);
+  flex-shrink: 0;
+}
+.workspace-header {
+  transition: background 0.2s, border 0.2s;
+}
+.workspace-header:hover {
+  background: rgba(52, 227, 53, 0.2);
+  color: #34e335;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 227, 53, 0.2);
+}
+.workspace-header.active:hover {
+  background: rgba(52, 227, 53, 0.2) !important;
+}
+
+.workspace-conversations {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  margin-top: 3px;
+  width: calc(100% - 15px);
+}
+
+.workspace-conversation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 2px;
+  transition: all 0.3s ease;
+  min-height: 32px;
+  background: none;
+  border: none;
+}
+
+.workspace-conversation-item:hover {
+  background: rgba(52, 227, 53, 0.2);
+  color: #34e335;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 227, 53, 0.2);
+}
+
+.workspace-conversation-item.active {
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workspace-conversation-item.active:hover {
+  background: rgba(52, 227, 53, 0.2) !important;
+  color: #34e335 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(52, 227, 53, 0.2) !important;
+}
+
+.workspace-conversation-item.active .conversation-dot {
+  width: 5px;
+  height: 5px;
+  background: #34e335;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(52, 227, 53, 0.6);
+  flex-shrink: 0;
+}
+
+.workspace-conversation-item .conversation-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para el contenedor de acciones de conversaciones */
+.conversation-actions {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.conversation-item:hover .conversation-actions,
+.workspace-conversation-item:hover .conversation-actions {
+  opacity: 1;
+}
+
+.conversation-edit-btn,
+.conversation-delete-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 0 !important;
+  transition: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  vertical-align: middle;
+}
+
+.conversation-delete-btn {
+  min-width: 29px !important;
+  min-height: 29px !important;
+}
+
+.conversation-edit-btn:hover,
+.conversation-delete-btn:hover {
+  background: none !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+
+.conversation-edit-btn img,
+.conversation-delete-btn img {
+  transition: filter 0.2s ease;
+}
+
+.conversation-edit-btn:hover img,
+.conversation-delete-btn:hover img {
+  filter: brightness(1.3);
+}
+
+.workspace-conversation-item .conversation-title {
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.workspace-conversation-item .conversation-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 2px;
+  color: #888;
+  transition: color 0.2s;
+  margin-top: 0px;
+}
+
+.workspace-conversation-item .conversation-delete-btn:hover {
+  color: #ff6b6b;
+}
+
+.workspace-conversation-item.active .conversation-delete-btn {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.workspace-conversation-item.active .conversation-delete-btn:hover {
+  color: white;
+}
+
+.workspace-actions {
+  display: flex;
+  align-items: center;
+  gap: 0px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  margin-right: 20px;
+}
+
+.workspace-header:hover .workspace-actions {
+  opacity: 1;
+}
+
+.workspace-action-btn {
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 0 !important;
+  transition: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 20px;
+  vertical-align: middle;
+}
+
+.workspace-action-btn:hover {
+  background: none !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+
+.workspace-action-btn.create-btn {
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.workspace-action-btn.create-btn:hover span {
+  color: #45f045 !important;
+}
+
+
+.workspace-action-btn img {
+  transition: filter 0.2s ease;
+}
+
+.workspace-action-btn:hover img {
+  filter: brightness(1.3);
+}
+
+/* Mejoras generales para el historial */
+.workspaces-chips-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 8px;
+  margin-left: 0;
+  padding-left: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 8px 0;
+}
+
+/* Los estilos de los botones están en popup.css */
+
+/* Forzar alineación de botones sin cambiar su apariencia */
+.library-btn,
+.new-workspace-btn,
+.new-conversation-btn {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  text-align: left !important;
+  color: #34e335 !important;
+}
+
+.library-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 0;
+  transition: opacity 0.2s;
+}
+
+.library-btn:hover {
+  opacity: 0.8;
+  color: #34e335 !important;
+}
+
+.new-workspace-btn:hover,
+.new-conversation-btn:hover {
+  color: #34e335 !important;
+}
+
+/* Menú desplegable de biblioteca */
+.library-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 4px;
+  padding: 4px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.library-menu-item {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 10px 12px;
+  text-align: left;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.library-menu-item:hover {
+  background: #333;
+}
+
+.library-menu-item:active {
+  background: #3a3a3a;
+}
+
+/* Asegurar que las conversaciones generales no interfieran */
+.conversations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  border-top: 1px solid #333;
+  padding-top: 8px;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.workspace-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.workspace-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.workspace-name {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workspace-stats {
+  font-size: 12px;
+  color: #888;
+}
+
+.default-badge {
+  background: #10B981;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* Conversations */
+.conversations-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.conversations-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.conversations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.date-header {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 0;
+  margin-left: 0;
+}
+
+.conversation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 12px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.conversation-item:hover {
+  background: rgba(52, 227, 53, 0.2);
+  color: #34e335;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 227, 53, 0.2);
+}
+
+.conversation-item.active {
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.conversation-item.active:hover {
+  background: rgba(52, 227, 53, 0.2) !important;
+  color: #34e335 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(52, 227, 53, 0.2) !important;
+}
+
+.conversation-item.active .conversation-dot {
+  width: 5px;
+  height: 5px;
+  background: #34e335;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(52, 227, 53, 0.6);
+  flex-shrink: 0;
+}
+
+.conversation-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-title {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-preview {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.conversation-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.conversation-time {
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.conversation-count {
+  font-size: 11px;
+  color: #888;
+  background: #333;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* Scrollbar personalizado */
+/* (scrollbar invisible: se eliminan estilos visuales) */
+
+/* Responsive */
+@media (max-width: 400px) {
+  .chat-history {
+    width: 280px;
+  }
+  
+  .workspace-item,
+  .conversation-item {
+    padding: 10px;
+  }
+} 
+
+.workspace-action-btn img {
+  transition: filter 0.2s;
+  opacity: 0.9;
+  width: 14px !important;
+  height: 14px !important;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+.conversation-delete-btn img {
+  transition: filter 0.2s;
+  opacity: 0.9;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+
+
+.workspace-action-btn:hover img,
+.conversation-delete-btn:hover img {
+  filter: brightness(1.4) contrast(1.3);
+  opacity: 1;
+}
+
+.workspace-conversation-item.active .conversation-delete-btn img {
+  filter: brightness(1.2) contrast(1.2);
+  opacity: 1;
+} 

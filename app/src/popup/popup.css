@@ -1,0 +1,2871 @@
+/* Botones de conectores (mismo fondo del panel, sin hover) */
+.settings-option.connectors { background: transparent !important; }
+.settings-option.connectors:hover { background: transparent !important; }
+.connector-btn {
+  background: var(--bg-panel-alt) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+  cursor: pointer !important;
+  position: relative;
+  white-space: nowrap;
+  min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.connector-btn:hover {
+  background: var(--bg-panel) !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.connector-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.connector-text-container {
+  position: relative;
+}
+
+.google-logo-container {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fondo negro para temas oscuros */
+body.theme-black .google-logo-container,
+body.theme-original .google-logo-container {
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fondo blanco para tema claro */
+body.theme-light .google-logo-container {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.google-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+/* Estilos movidos arriba */
+.connector-google { color: #2196f3 !important; }
+.connector-whatsapp { color: #34e335 !important; }
+
+/* Texto que mantiene el espacio */
+.connector-status {
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity 0.15s ease-in-out;
+}
+
+/* Texto que se superpone exactamente */
+.connector-action {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  cursor: pointer !important;
+}
+
+/* En hover: ocultar el estado y mostrar la acción */
+.connector-btn.show-action .connector-status {
+  opacity: 0;
+}
+
+.connector-btn.show-action .connector-action {
+  opacity: 1;
+}
+:root {
+  --bg: #0f1117;
+  --bg-panel: #181a20;
+  --bg-panel-alt: #1a1b21;
+  --text: #fff;
+  --text-alt: #e0e0e0;
+  --text-muted: #999;
+  --border: #333;
+  --primary: #00C851;
+  --primary-alt: #00A142;
+  --skanea-green: #4CAF50;
+  --danger: #ff3b3b;
+  --input-bar-height: 48px;
+  --input-bar-offset: 24px;
+  /* Ajustes del textarea: estos dos valores controlan posición de scrollbar y compresión del texto */
+  --msg-textarea-padding-right: 24px; /* espacio interior a la derecha del texto */
+  --msg-scrollbar-right: -36px;      /* desplazamiento horizontal del track respecto al wrapper */
+}
+body.theme-black {
+  --bg: #14161a;
+  --bg-panel: #0a0a0b;
+  --bg-panel-alt: #23242a;
+  --text: #fff;
+  --text-alt: #e0e0e0;
+  --text-muted: #888;
+  --border: #222;
+  --primary: #00C851;
+  --primary-alt: #00A142;
+  --skanea-green: #4CAF50;
+  --danger: #ff3b3b;
+}
+body.theme-original {
+  --bg: #0f1117;
+  --bg-panel: #181a20;
+  --bg-panel-alt: #1a1b21;
+  --text: #fff;
+  --text-alt: #e0e0e0;
+  --text-muted: #999;
+  --border: #333;
+  --primary: #00C851;
+  --primary-alt: #00A142;
+  --skanea-green: #4CAF50;
+  --danger: #ff3b3b;
+}
+body.theme-light {
+  --bg: #f7f7fa;
+  --bg-panel: #fff;
+  --bg-panel-alt: #f0f0f0;
+  --text: #181a20;
+  --text-alt: #333;
+  --text-muted: #666;
+  --border: #d0d0d0;
+  --primary: #00C851;
+  --primary-alt: #00A142;
+  --skanea-green: #4CAF50;
+  --danger: #ff3b3b;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  overflow: hidden; /* evita scroll de toda la página y el espacio vacío inferior */
+  /* Variables para ajustar márgenes laterales del chat y de los globos */
+  --chat-padding-x: 125px;   /* padding lateral del contenedor .messages */
+  --bubble-gap-x: 22px;     /* margen lateral de cada globo */
+}
+
+/* --- Márgenes responsivos (override variables) --- */
+@media (max-width: 1200px) {
+  body { --chat-padding-x: 60px; --bubble-gap-x: 18px; }
+}
+@media (max-width: 900px) {
+  body { --chat-padding-x: 36px; --bubble-gap-x: 14px; }
+}
+@media (max-width: 768px) {
+  body { --chat-padding-x: 24px; --bubble-gap-x: 12px; }
+}
+@media (max-width: 500px) {
+  body { --chat-padding-x: 16px; --bubble-gap-x: 10px; }
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: 1rem;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-panel);
+  position: relative; /* para posicionar la barra absoluta dentro */
+  overflow: hidden; /* para controlar el scroll desde .messages */
+  /* Margen horizontal configurable para los globos de mensajes */
+  --bubble-gap-x: 16px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden; /* evitar barra horizontal inferior */
+  padding: 1rem var(--chat-padding-x, 1rem); /* padding balanceado */
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Extra espacio cuando hay barra de adjuntos flotante */
+.messages.with-attachments {
+  padding-bottom: calc(var(--input-bar-height) + var(--input-bar-offset) + 56px);
+}
+
+/* Asegurar que la barra de entrada siempre sea visible pegada al borde inferior */
+.fancy-input-bar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--input-bar-offset);
+  width: min(900px, calc(100% - (var(--input-bar-offset) * 2)));
+  min-height: var(--input-bar-height);
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+/* Reservar espacio al final del scroll para que el input fijo no tape el contenido */
+.messages {
+  padding-bottom: calc(var(--input-bar-height) + var(--input-bar-offset) - 8px);
+  min-height: calc(100vh - var(--input-bar-height) - var(--input-bar-offset) - 60px);
+}
+
+.message {
+  margin: 16px 0 clamp(18px, 5vh, 32px) 0; /* espaciado responsivo */
+  word-break: break-word;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.message.user {
+  align-self: flex-end;
+  color: var(--text);
+  font-size: 0.9rem;
+  background: var(--bg-panel-alt);
+  max-width: 100%; /* estira un poco más hacia la izquierda */
+  display: inline-block;
+  border-radius: 18px;
+  padding: 12px 17.5px; /* volvemos al padding original */
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  margin-left: auto;
+  margin-right: var(--bubble-gap-x, 16px); /* margen lateral ajustable */
+  text-align: justify;
+}
+.message.user { margin-top: 16px; margin-bottom: clamp(18px, 5vh, 32px); }
+
+/* Placeholder para mensajes vacíos del usuario */
+.message .empty-placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Tarjetas de adjuntos dentro del mensaje del usuario */
+.message .message-attachments {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 8px;
+	/* alineación visual con el texto del mensaje */
+	margin-left: -4px;
+}
+.message .attachment-card {
+    background: #1e1f26;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    max-width: clamp(260px, 60vw, 680px);
+}
+.message .attachment-card.image img {
+	width: 48px;
+	height: 48px;
+	object-fit: cover;
+	border-radius: 8px;
+}
+
+/* Imagen adjunta fuera del globo de mensaje (miniatura) */
+.inline-image.user {
+	display: block;
+	align-self: flex-end; /* derecha */
+	margin-left: auto; /* empujar a la derecha */
+	/* Alinear borde derecho con el del globo del usuario */
+	margin-right: var(--bubble-gap-x, 16px);
+	width: 80px; /* miniatura aún más pequeña */
+	height: auto;
+	border-radius: 8px;
+	margin-top: 4px; /* más cerca del globo, sin tocarlo */
+	margin-bottom: 0;
+	box-shadow: 0 1px 4px rgba(0,0,0,0.28);
+	border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Reducir el margen superior del globo de mensaje del usuario si viene justo después de una miniatura */
+.inline-image.user + .message.user {
+	margin-top: 4px;
+}
+.message .attachment-card .doc-icon {
+	width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #2b2d36; color: #ff7fb3; font-weight: 800; font-size: 12px;
+}
+.message .attachment-card .meta { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
+.message .attachment-card .meta .fname { font-size: 13px; color: #d8e6ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.message .attachment-card .meta .ftype { font-size: 11px; color: #9fb0c8; }
+
+@media (min-width: 1400px) {
+  .message .attachment-card { max-width: clamp(420px, 70vw, 920px); }
+  .message .attachment-card .meta .fname { white-space: normal; }
+}
+
+.message.bot,
+.message.assistant {
+  align-self: stretch; /* ocupar siempre todo el ancho */
+  text-align: justify;
+  background: var(--bg-panel); /* mismo color que el fondo */
+  color: var(--text-alt);
+  display: block;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 16px var(--bubble-gap-x, 16px) clamp(18px, 5vh, 32px) var(--bubble-gap-x, 16px);
+  border-radius: 18px;
+  padding: 12px 18px; /* volvemos al padding original */
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+}
+
+/* Modo Black: Bot/assistant un poco más claro que el panel para mejor contraste */
+body.theme-black .message.bot,
+body.theme-black .message.assistant {
+  background: var(--bg-panel); /* mismo color que el fondo en tema black */
+  border: none;
+}
+
+/* Modo Black: usuario ligeramente más claro para mejor contraste */
+body.theme-black .message.user {
+  background: #24252B;
+}
+
+/* Tema original: usuario con fondo más oscuro para contraste */
+body.theme-original .message.user {
+  background: #151414;
+}
+
+/* Tema light: Ajustar bordes de mensajes del bot para que coincidan con el fondo */
+body.theme-light .message.bot,
+body.theme-light .message.assistant {
+  background: #fff; /* Blanco puro como el fondo en tema light */
+  border: none; /* Sin bordes */
+  border-radius: 0; /* Sin redondeo de esquinas */
+  box-shadow: none; /* Sin sombra */
+}
+
+/* Tema original: Ajustar bordes de mensajes del bot para que coincidan con el fondo */
+body.theme-original .message.bot,
+body.theme-original .message.assistant {
+  background: #181a20; /* Mismo color que el fondo en tema original */
+  border: none; /* Sin bordes */
+  border-radius: 0; /* Sin redondeo de esquinas */
+  box-shadow: none; /* Sin sombra */
+}
+
+/* Estilos para edición de mensajes */
+.message.user,
+.message.bot,
+.message.assistant {
+  position: relative;
+}
+
+.message-content {
+  display: inline-block;
+  width: 100%;
+}
+
+/* Contenedor para los botones de acción */
+.message-actions {
+  position: absolute;
+  bottom: -25px; /* Bajado 3px más (de -20px a -23px) */
+  right: -4px; /* permitir que sobresalga hacia la izquierda si el globo es angosto */
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 5; /* asegurar que quede por encima de los globos */
+  pointer-events: auto; /* aceptar clics incluso fuera del globo */
+  white-space: nowrap; /* evitar salto vertical de texto en botones estrechos */
+}
+
+.message.user:hover .message-actions,
+.message.bot:hover .message-actions,
+.message.assistant:hover .message-actions {
+  opacity: 1;
+}
+
+/* Mantener visibles cuando el cursor está sobre los botones */
+.message .message-actions:hover {
+  opacity: 1;
+}
+
+.edit-message-btn,
+.copy-message-btn {
+  background: var(--bg-panel); /* Usar color del fondo en lugar de negro */
+  border: none;
+  color: rgba(255, 255, 255, 0.85); /* Texto más brillante */
+  font-size: 12px; /* Tamaño de fuente aumentado de 10px a 12px */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+  white-space: nowrap; /* mantener el texto horizontal */
+  min-width: 54px; /* evitar colapso cuando el contenedor es más estrecho */
+}
+
+.edit-message-btn:hover,
+.copy-message-btn:hover {
+  color: rgba(255, 255, 255, 0.95); /* Texto aún más brillante al hover */
+  background: rgba(0, 0, 0, 0.5); /* Un poco más oscuro al hover */
+  transform: translateY(-1px);
+}
+
+/* Feedback visual de copia igual que el botón de bloques de código */
+.copy-message-btn.copied {
+  background: rgba(100, 255, 170, 0.18);
+  border: 1px solid rgba(100, 255, 170, 0.35);
+  color: #eafff3;
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.25);
+}
+
+/* Estilos específicos para botones del bot */
+.bot-actions {
+  left: 6px; /* Movido 10px a la derecha (de -4px a 6px) */
+  right: auto;
+  bottom: -20px;
+}
+
+.edited-indicator {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 6px;
+}
+
+/* Estilos para el modo de edición */
+.message-edit-container {
+  width: 100%;
+}
+
+/* Cuando el mensaje del usuario está en modo edición, expandirlo al máximo */
+.message.user:has(.message-edit-container) {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: var(--bubble-gap-x) !important;
+  margin-right: var(--bubble-gap-x) !important;
+  align-self: stretch !important;
+}
+
+.message-edit-input {
+  width: 100%;
+  min-height: 60px;
+  background: var(--bg-panel);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  line-height: 1.4;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  /* Consistencia de scrollbar en todos los navegadores */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(52, 227, 53, 0.6) rgba(26, 26, 26, 0.3); /* Firefox */
+}
+
+/* Scrollbar (WebKit) del textarea de edición */
+.message-edit-input::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.message-edit-input::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.434);
+  border-radius: 10px;
+  margin: 4px 0;
+}
+.message-edit-input::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  transition: all 0.3s ease;
+}
+.message-edit-input::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+  transform: scaleX(1.2);
+}
+
+.message-edit-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.message-edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}
+
+.edit-save-btn,
+.edit-cancel-btn {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.edit-save-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.edit-save-btn:hover:not(:disabled) {
+  background: #45a049;
+}
+
+.edit-save-btn:disabled {
+  background: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.edit-cancel-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.edit-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+/* Modo Black: ajustes para edición */
+body.theme-black .message-edit-input {
+  background: #31323a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+body.theme-black .message-edit-input:focus {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Tema original: ajustes para edición (gris oscuro 2 tonos más claro que el globo) */
+body.theme-original .message-edit-input {
+  background: #2e2e2e; /* 2 tonos más claro que #151414 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.theme-original .message-edit-input:focus {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Tema light: ajustes para botones de acción */
+body.theme-light .edit-message-btn,
+body.theme-light .copy-message-btn {
+  background: rgba(255, 255, 255, 0.8);
+  color: #333; /* Texto más oscuro y visible */
+  font-size: 12px; /* Mismo tamaño que tema oscuro */
+  border: none; /* Sin borde en tema light */
+}
+
+body.theme-light .edit-message-btn:hover,
+body.theme-light .copy-message-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000; /* Texto negro al hover para máximo contraste */
+}
+
+/* Tema light: ajustes para botón de cancelar en edición */
+body.theme-light .edit-cancel-btn {
+  background: transparent;
+  color: #666;
+  border: 1px solid #d0d0d0; /* Borde visible en tema light */
+}
+
+body.theme-light .edit-cancel-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+  border-color: #999;
+}
+
+/* Tema original: mantener el mismo fondo en hover */
+body.theme-original .edit-message-btn:hover,
+body.theme-original .copy-message-btn:hover {
+  background: #181a20; /* Mismo color del fondo del tema original */
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Media query para ventanas pequeñas */
+@media (max-height: 600px) {
+  .message {
+    margin-bottom: 24px !important;
+  }
+
+  .message.user {
+    margin-bottom: 24px !important;
+  }
+
+  .message.bot,
+  .message.assistant {
+    margin-bottom: 24px !important;
+  }
+
+  .message-actions {
+    bottom: -23px; /* Bajado 3px más (de -18px a -21px) */
+  }
+
+  .bot-actions {
+    bottom: -23px; /* Bajado 3px más (de -18px a -21px) */
+  }
+}
+
+/* Garantizar justificación del contenido generado por el typewriter */
+.message.bot .typewriter-text,
+.message.assistant .typewriter-text,
+.message.user .typewriter-text {
+  display: block;
+  text-align: justify;
+}
+
+/* Animación de carga con puntos */
+.loading-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.loading-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-alt);
+  animation: loadingDot 1.4s infinite ease-in-out;
+}
+
+.loading-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.loading-dots .dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes loadingDot {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Efecto typewriter para las respuestas del bot */
+.typewriter-text {
+  /* Evitar saltos de línea artificiales del texto y permitir que ocupe todo el ancho */
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Enlaces dentro de mensajes del bot: azul y subrayados */
+.message.bot a.sk-link,
+.message.assistant a.sk-link {
+  color: #4ea7ff;
+  text-decoration: underline;
+}
+.message.bot a.sk-link:hover,
+.message.assistant a.sk-link:hover {
+  color: #79bdff;
+}
+
+/* Bloques de código dentro de mensajes */
+.code-block {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #e6e6e6;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Tarjeta de código con cabecera (lenguaje + copiar) */
+.code-card {
+  background: linear-gradient(180deg, rgba(24,25,28,0.9), rgba(18,19,22,0.92));
+  border: 1px solid rgba(46, 255, 120, 0.12);
+  border-radius: 14px;
+  margin: 10px 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.code-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(46, 255, 120, 0.18);
+  background: linear-gradient(90deg, rgba(46, 255, 120, 0.10), rgba(0,0,0,0));
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+.code-card__lang {
+  color: #9dffbc;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-size: 13px;
+}
+.code-card__copy {
+  background: rgba(46, 255, 120, 0.10);
+  border: 1px solid rgba(46, 255, 120, 0.28);
+  color: #c6ffd8;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .18s ease;
+}
+.code-card__copy:hover {
+  background: rgba(46, 255, 120, 0.18);
+  transform: translateY(-1px);
+}
+.code-card__copy.copied {
+  background: rgba(100, 255, 170, 0.18);
+  border-color: rgba(100, 255, 170, 0.35);
+  color: #eafff3;
+}
+.code-card .code-block {
+  margin: 0;
+  border: none;
+  background: linear-gradient(180deg, rgba(14,15,18,0.95), rgba(12,13,16,0.95));
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+/* Coloreado sintáctico simple (toque original) */
+.code-block .token.comment { color: #6b7b6f; }
+.code-block .token.string { color: #afff9e; }
+.code-block .token.number { color: #ffe08a; }
+.code-block .token.keyword { color: #7ed3ff; }
+.code-block .token.function { color: #ffd0f0; }
+.code-block .token.class-name { color: #ffe2a6; }
+
+/* Tarjeta de matemáticas (LaTeX) */
+/* Flujo matemático en línea/bloque sin tarjeta especial */
+.math-flow { padding: 4px 0; }
+
+/* Adjuntos barra */
+.attachments-bar {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: calc(var(--input-bar-height) + var(--input-bar-offset) + 8px);
+	width: min(900px, calc(100% - (var(--input-bar-offset) * 2)));
+	box-sizing: border-box;
+	padding: 8px 10px;
+	border-radius: 12px;
+	background: rgba(0,0,0,0.38);
+	backdrop-filter: blur(6px);
+	border: 1px solid rgba(255,255,255,0.08);
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 8px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	z-index: 11;
+}
+
+/* Scrollbar consistente para la barra de adjuntos */
+.attachments-bar::-webkit-scrollbar { height: 8px; }
+.attachments-bar::-webkit-scrollbar-track {
+	background: rgba(26, 26, 26, 0.3);
+	border-radius: 10px;
+	margin: 4px 0;
+}
+.attachments-bar::-webkit-scrollbar-thumb {
+	background: linear-gradient(90deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+	border-radius: 10px;
+	border: 1px solid rgba(52, 227, 53, 0.2);
+	transition: all 0.3s ease;
+}
+.attachments-bar::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(90deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+	box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+	transform: scaleY(1.2);
+}
+.attachment-chip {
+	background: rgba(0, 204, 255, 0.1);
+	border: 1px solid rgba(0, 204, 255, 0.25);
+	color: #b6eaff;
+	border-radius: 999px;
+	padding: 6px 10px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12px;
+	white-space: nowrap;
+}
+.attachment-chip .remove-attachment {
+	background: transparent;
+	border: none;
+	color: #b6eaff;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	cursor: pointer;
+	line-height: 18px;
+	text-align: center;
+	font-size: 14px;
+	opacity: 0.7;
+	transition: all 0.15s ease;
+}
+.attachment-chip .remove-attachment:hover {
+	background: rgba(255,255,255,0.1);
+	opacity: 1;
+}
+.attachment-chip:first-child { margin-bottom: 0; transform: none; }
+.attachment-chip .name { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.attachment-chip .progress {
+	width: 80px;
+	height: 6px;
+	background: rgba(255,255,255,0.06);
+	border-radius: 999px;
+	overflow: hidden;
+}
+.attachment-chip .progress .bar { height: 100%; background: #00cfff; width: 0; }
+.attachment-chip button { background: transparent; color: #b6eaff; border: none; cursor: pointer; }
+
+.attachments-wrapper { position: relative; }
+.drop-overlay {
+	position: absolute;
+	left: 0; right: 0; top: 0; bottom: 0;
+	border: 2px dashed rgba(0, 204, 255, 0.35);
+	border-radius: 14px;
+	background: rgba(0, 204, 255, 0.06);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	color: #b6eaff;
+}
+.attachments-wrapper.dragging .drop-overlay { display: flex; }
+
+/* Overlay global para arrastrar y soltar en toda la pantalla */
+.global-drop-overlay {
+	position: fixed;
+	left: 0; right: 0; top: 0; bottom: 0;
+	background: rgba(0, 0, 0, 0.55);
+	border: 2px dashed rgba(0, 200, 81, 0.45);
+	color: #d7ffdf;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+	font-size: 18px;
+	backdrop-filter: blur(2px);
+}
+
+/* Toasts */
+.toast-container {
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: calc(var(--input-bar-height) + var(--input-bar-offset) + 64px);
+	width: min(900px, calc(100% - (var(--input-bar-offset) * 2)));
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: center;
+	z-index: 1200;
+}
+.toast {
+	background: rgba(20,20,20,0.9);
+	color: #eaeaea;
+	border: 1px solid rgba(255,255,255,0.12);
+	border-left: 4px solid var(--primary);
+	padding: 10px 14px;
+	border-radius: 10px;
+	box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+	backdrop-filter: blur(6px);
+	font-size: 14px;
+}
+.toast.info { border-left-color: #34e335; }
+.toast.warning { border-left-color: #ffc107; }
+.toast.error { border-left-color: #ff3b3b; }
+
+.typewriter-cursor {
+  color: var(--primary);
+  font-weight: bold;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.input-container {
+  display: flex;
+  border-top: 1px solid var(--border);
+}
+
+.input-container input {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  background: var(--bg-panel-alt);
+  color: var(--text);
+}
+
+.input-container button {
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* Historial - Comentado para evitar conflictos con ChatHistory.css */
+/*
+.chat-history {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  background: var(--bg-panel-alt);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 0.5rem;
+  z-index: 5;
+}
+
+.chat-history h3 {
+  margin: 0 0 0.5rem;
+}
+
+.chat-history-item {
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+
+.chat-history-empty {
+  padding: 0.5rem 0;
+  color: #aaa;
+  font-style: italic;
+}
+*/
+
+.welcome-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #34e335;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.welcome-message h3 {
+  margin: 0 0 16px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #34e335;
+}
+
+.welcome-message p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #888;
+}
+
+/* Chat */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-btn,
+.history-btn,
+.workspaces-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.settings-btn:hover,
+.history-btn:hover,
+.workspaces-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Logo */
+.logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  height: 32px;
+  filter: brightness(1.2);
+}
+
+/* Ajustes */
+.settings-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.settings-window {
+  background: #1a1b21;
+  border: 1px solid #333;
+  padding: 1rem;
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Fancy input bar redesign - simple, clean, beautiful */
+.fancy-input-bar {
+  display: flex;
+  align-items: center;
+  background: #151414;
+  border-radius: 24px;
+  padding: 6px 10px; /* un poco menos alto */
+  margin: 0;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.12);
+  position: relative;
+  gap: 8px;
+  height: var(--input-bar-height); /* fija la altura del contenedor */
+  overflow: visible; /* permite que el textarea crezca sin afectar el contenedor */
+}
+.fancy-input-bar .icon-btn {
+  background: #0f0f0f;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  padding: 0;
+}
+.fancy-input-bar .icon-btn:hover {
+  /* Hover uniforme y sutilmente más claro para todos los botones inferiores */
+  background: #1e1e1e;
+}
+.fancy-input-bar .icon-btn:active,
+.fancy-input-bar .icon-btn:focus {
+  background: #151414;
+}
+.fancy-input-bar .icon-btn img {
+  width: 70%;
+  height: 70%;
+  max-width: 32px;
+  max-height: 32px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff) contrast(1.4);
+}
+
+/* Asegurar que el botón stop (SVG) respete el mismo sizing que img */
+.fancy-input-bar .stop-btn svg {
+  width: 70%;
+  height: 70%;
+  max-width: 32px;
+  max-height: 32px;
+  display: block;
+  filter: drop-shadow(0 0 2px #ffffff88) contrast(1.2);
+}
+
+/* Excluir las imágenes de eliminar del filtro general */
+.conversation-delete-btn img,
+.workspace-action-btn img {
+  filter: none !important;
+}
+
+/* Excluir los botones de eliminar de los estilos generales de icon-btn */
+.conversation-delete-btn,
+.workspace-action-btn {
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.fancy-input-bar input[type="text"] {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: #0f0f0f;
+  color: #fff;
+  border-radius: 18px;
+  padding: 8px 14px;
+  font-size: 1rem;
+  margin: 0 4px;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
+}
+.fancy-input-bar input[type="text"]:focus,
+.fancy-input-bar input[type="text"]:focus-visible {
+  box-shadow: none;
+  background: #151414;
+}
+/* Textarea de mensajes con autosize (máximo 7 líneas) */
+.fancy-input-bar .message-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: #151414; /* igual que el contenedor inferior */
+  color: #fff;
+  border-radius: 18px;
+  padding: 6px 10px 1px; /* bajar el cursor/texto ~2px para centrar verticalmente */
+  font-size: 0.96rem; /* ALTURA INICIAL: también influye */
+  margin: 0 4px;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
+  resize: none;
+  line-height: 1.2rem; /* ALTURA INICIAL: base de línea */
+  max-height: calc(1.2rem * 7 + 12px); /* fallback si JS no corre */
+  overflow-y: hidden;
+  font-family: inherit; /* usar misma fuente de la app */
+}
+
+/* Placeholder más visible y elegante */
+.fancy-input-bar .message-input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+/* Aplicar compresión solo cuando hay scrollbar personalizada */
+.fancy-input-bar .message-input.has-scroll {
+  padding-right: var(--msg-textarea-padding-right);
+}
+.fancy-input-bar .message-input:focus,
+.fancy-input-bar .message-input:focus-visible {
+  box-shadow: none;
+  background: #151414;
+}
+
+/* Scrollbar del textarea: estilo Skanea, más fina */
+.fancy-input-bar .message-input::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  -webkit-appearance: none !important;
+}
+
+.fancy-input-bar .message-input::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.3) !important;
+  border-radius: 10px !important;
+  margin: 2px 0 !important;
+  -webkit-appearance: none !important;
+}
+
+.fancy-input-bar .message-input::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%) !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(52, 227, 53, 0.2) !important;
+  transition: all 0.3s ease !important;
+  -webkit-appearance: none !important;
+}
+
+.fancy-input-bar .message-input::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%) !important;
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4) !important;
+  transform: scaleX(1.2) !important;
+}
+
+/* ELIMINAR BOTONES DE FLECHA - FORZAR */
+.fancy-input-bar .message-input::-webkit-scrollbar-button,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:single-button,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:start:decrement,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:end:increment,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:vertical:increment,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:vertical:decrement,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:corner-present,
+.fancy-input-bar .message-input::-webkit-scrollbar-button:no-button {
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: none !important;
+  background: transparent !important;
+  border: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Firefox - forzar estilo */
+.fancy-input-bar .message-input {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(52, 227, 53, 0.6) rgba(26, 26, 26, 0.3) !important;
+}
+
+/* INTENTO ALTERNATIVO: Forzar scrollbar nativa de Chromium */
+.fancy-input-bar .message-input {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+
+.fancy-input-bar .message-input::-webkit-scrollbar {
+  display: none !important; /* Ocultar scrollbar nativa */
+}
+
+/* Crear scrollbar personalizada con JavaScript */
+.fancy-input-bar .message-input.custom-scrollbar {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fancy-input-bar .message-input.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Quitar outline nativo de navegadores en foco para inputs/textarea en la barra */
+.fancy-input-bar input[type="text"]:focus,
+.fancy-input-bar input[type="text"]:focus-visible,
+.fancy-input-bar .message-input:focus,
+.fancy-input-bar .message-input:focus-visible {
+  outline: none;
+}
+
+/* Wrapper del textarea para scrollbar overlay */
+.message-input-wrapper {
+  position: relative;
+  flex: 1;
+  /* mover más a la izquierda y dejar espacio al botón de audio */
+  margin: 0 25px 0 -5.5px;
+  /* reducir el ancho máximo en 2px para evitar solaparse */
+  max-width: calc(100% - 2px);
+  height: 100%; /* ocupar la altura fija del contenedor */
+}
+
+.message-input-wrapper .message-input {
+  width: 100%;
+  display: block;
+  /* anclar el textarea al borde inferior del wrapper para que crezca hacia arriba */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.35px; /* ajustado 3px más abajo */
+  z-index: 1;
+  /* el padding-right se aplica condicionalmente con la clase .has-scroll */
+}
+
+/* (el chip de intención ha sido removido) */
+
+/* Oculta la scrollbar nativa visualmente pero mantiene el scroll para accesibilidad */
+.message-input::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.message-input {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Scrollbar personalizada overlay, estilo Skanea */
+.custom-scrollbar-track {
+  position: absolute;
+  top: 2px;
+  right: var(--msg-scrollbar-right);
+  bottom: 2px; /* ocupar toda la altura visible del wrapper */
+  width: 6px;
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 10px;
+  pointer-events: auto; /* permitir click/drag también en el track */
+  z-index: 2; /* por encima del textarea para permitir arrastre */
+}
+
+/* Responsivo: adapta offset y padding para tamaños reducidos */
+@media (max-width: 900px) {
+  :root { --msg-textarea-padding-right: 32px; --msg-scrollbar-right: -30px; }
+}
+
+@media (max-width: 600px) {
+  :root { --msg-textarea-padding-right: 28px; --msg-scrollbar-right: -26px; }
+}
+
+@media (max-width: 420px) {
+  :root { --msg-textarea-padding-right: 26px; --msg-scrollbar-right: -37.5px; }
+}
+
+.custom-scrollbar-thumb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.2);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.custom-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+}
+.fancy-input-bar .send-btn img {
+  filter: drop-shadow(0 0 2px #006cff88);
+}
+
+/* Efecto visual de bloqueo para el botón de enviar */
+.fancy-input-bar .send-btn.disabled-visual {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.fancy-input-bar .send-btn.disabled-visual img {
+  filter: grayscale(100%) brightness(0.6) drop-shadow(0 0 1px rgba(255,255,255,0.1));
+  transition: filter 0.3s ease;
+}
+
+.fancy-input-bar .mic-btn img {
+  filter: drop-shadow(0 0 2px #00ffb388);
+}
+
+/* Mover el mic solo cuando el formulario reporta scroll del textarea */
+.input-container.input-has-scroll .mic-btn {
+  margin-left: 11px !important; /* asegura override cuando hay scroll */
+}
+
+/* Estilos para el botón de micrófono cuando está grabando */
+.fancy-input-bar .mic-btn.recording {
+  background: #34e335 !important;
+  animation: pulse-recording 1.5s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(52, 227, 53, 0.6);
+}
+
+.fancy-input-bar .mic-btn.recording img {
+  filter: drop-shadow(0 0 4px #ffffff) contrast(1.2);
+}
+
+@keyframes pulse-recording {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(52, 227, 53, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(52, 227, 53, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(52, 227, 53, 0.6);
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+.fancy-input-bar .attach-btn img {
+  filter: drop-shadow(0 0 2px #ffb30088);
+}
+/* Media queries para mejor responsive design */
+@media (min-width: 1400px) {
+  .fancy-input-bar {
+    width: min(900px, calc(100% - (var(--input-bar-offset) * 2)));
+  }
+  .messages {
+    max-width: none; /* ocupar todo el ancho para que la scrollbar quede al extremo derecho */
+    width: 100%;
+    margin: 0; /* evitar centrado que desplaza la barra */
+    padding-left: var(--chat-padding-x, 2rem);
+    padding-right: var(--chat-padding-x, 2rem);
+  }
+  .chat-container {
+    max-width: 100vw;
+  }
+  .attachments-bar { width: min(900px, calc(100% - (var(--input-bar-offset) * 2))); }
+}
+
+@media (min-width: 1200px) {
+  .fancy-input-bar {
+    width: min(800px, calc(100% - (var(--input-bar-offset) * 2)));
+  }
+  .messages {
+    max-width: none; /* mantener scrollbar al borde derecho */
+    width: 100%;
+    margin: 0;
+    padding-left: var(--chat-padding-x, 1.5rem);
+    padding-right: var(--chat-padding-x, 1.5rem);
+  }
+  .attachments-bar { width: min(800px, calc(100% - (var(--input-bar-offset) * 2))); }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --input-bar-offset: 16px;
+  }
+  .fancy-input-bar {
+    width: calc(100% - 32px);
+    margin: 0;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .attachments-bar {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(var(--input-bar-height) + var(--input-bar-offset) + 6px);
+    width: calc(100% - 32px);
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  .message.bot,
+  .message.assistant {
+    max-width: none;
+    width: 100%;
+    margin: 8px 0; /* sin márgenes laterales */
+    align-self: stretch;
+  }
+  .message.user {
+    max-width: 90%;
+    margin: 8px 4px 8px auto; /* mantener alineación a la derecha */
+    align-self: flex-end;
+    margin-left: auto;
+    margin-right: 4px;
+  }
+
+  /* En móvil, también expandir cuando se edita al máximo */
+  .message.user:has(.message-edit-container) {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-left: var(--bubble-gap-x) !important;
+    margin-right: var(--bubble-gap-x) !important;
+    align-self: stretch !important;
+  }
+
+  .messages {
+    padding: 0.8rem var(--chat-padding-x, 0.8rem) calc(var(--input-bar-height) + var(--input-bar-offset) - 8px) var(--chat-padding-x, 0.8rem);
+  }
+  .logo {
+    height: 28px;
+  }
+  .top-bar {
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 500px) {
+  :root {
+    --input-bar-offset: 12px;
+    --input-bar-height: 44px;
+  }
+  .fancy-input-bar {
+    width: calc(100% - 24px);
+    padding: 4px 8px;
+    gap: 6px;
+    border-radius: 20px;
+  }
+  .attachments-bar {
+    width: calc(100% - 24px);
+    bottom: calc(var(--input-bar-height) + var(--input-bar-offset) + 6px);
+  }
+  .fancy-input-bar .icon-btn {
+    height: 32px;
+    width: 32px;
+  }
+  .fancy-input-bar .icon-btn img {
+    width: 70%;
+    height: 70%;
+  }
+  .fancy-input-bar input[type="text"] {
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    border-radius: 16px;
+  }
+  .fancy-input-bar .message-input {
+    padding: 6px 9px 1px; /* mantener centrado vertical también en mobile */
+    font-size: 0.94rem;
+    border-radius: 16px;
+    line-height: 1.18rem;
+    max-height: calc(1.18rem * 7 + 10px);
+  }
+  .messages {
+    padding: 0.6rem var(--chat-padding-x, 0.6rem) calc(var(--input-bar-height) + var(--input-bar-offset) - 8px) var(--chat-padding-x, 0.6rem);
+  }
+  .message.bot {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+    text-align: justify;
+    align-self: stretch;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+  .message.assistant {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+    text-align: justify;
+    align-self: stretch;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+  .message.user {
+    font-size: 0.85rem;
+    text-align: justify;
+    margin: 6px 4px 6px auto; /* mantener alineación a la derecha */
+    max-width: 95%;
+    align-self: flex-end;
+    margin-left: auto;
+    margin-right: 4px;
+  }
+
+  /* En móviles muy pequeños, también expandir cuando se edita al máximo */
+  .message.user:has(.message-edit-container) {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-left: var(--bubble-gap-x) !important;
+    margin-right: var(--bubble-gap-x) !important;
+    align-self: stretch !important;
+  }
+
+  .message.bot,
+  .message.assistant {
+    max-width: 95%;
+    margin: 6px 4px; /* mantener alineación a la izquierda del bot */
+    align-self: flex-start;
+  }
+  .welcome-message {
+    padding: 20px 15px; /* reducir padding en móvil */
+    max-width: 90%;
+  }
+}
+
+/* Scrollbar personalizado para el chat */
+.chat-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-area::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+.chat-area::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  transition: all 0.3s ease;
+}
+
+.chat-area::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+  transform: scaleX(1.2);
+}
+
+/* También mantener scrollbar en messages para casos específicos */
+.messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  transition: all 0.3s ease;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+  transform: scaleX(1.2);
+}
+
+/* Scrollbar personalizado verde para bloques de código (horizontal) */
+.code-block::-webkit-scrollbar {
+  height: 8px; /* altura para scrollbar horizontal */
+  width: 8px;  /* ancho para scrollbar vertical si aparece */
+}
+
+.code-block::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 10px;
+  margin: 0 4px;
+}
+
+.code-block::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  transition: all 0.3s ease;
+}
+
+.code-block::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+  transform: scaleY(1.2);
+}
+
+/* Esquina donde se cruzan scrollbars vertical y horizontal */
+.code-block::-webkit-scrollbar-corner {
+  background: rgba(26, 26, 26, 0.3);
+}
+
+/* Aplicar mismo estilo a bloques de código dentro de tarjetas */
+.code-card .code-block::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.code-card .code-block::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 10px;
+  margin: 0 4px;
+}
+
+.code-card .code-block::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  transition: all 0.3s ease;
+}
+
+.code-card .code-block::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+  transform: scaleY(1.2);
+}
+
+.code-card .code-block::-webkit-scrollbar-corner {
+  background: rgba(26, 26, 26, 0.3);
+}
+
+/* Aplicar mismo estilo a elementos pre que puedan tener scroll */
+pre::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.3);
+  border-radius: 10px;
+  margin: 0 4px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, rgba(52, 227, 53, 0.6) 0%, rgba(52, 227, 53, 0.4) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(52, 227, 53, 0.2);
+  transition: all 0.3s ease;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, rgba(52, 227, 53, 0.8) 0%, rgba(52, 227, 53, 0.6) 100%);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.4);
+  transform: scaleY(1.2);
+}
+
+pre::-webkit-scrollbar-corner {
+  background: rgba(26, 26, 26, 0.3);
+}
+
+/* --- Ajustes Drawer --- */
+.settings-drawer-overlay {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  transition: background 0.3s;
+}
+.settings-drawer {
+  background: var(--bg-panel-alt);
+  width: 400px;
+  min-width: 300px;
+  max-width: 600px;
+  height: 100vh;
+  box-shadow: -2px 0 16px 0 rgba(0,0,0,0.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.5rem calc(1.5rem + 32px) 1.5rem; /* dar margen extra al final */
+  animation: slideInDrawer 0.3s cubic-bezier(.4,1.2,.6,1) 1;
+  overflow-y: auto; /* permitir scroll interno */
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 480px) {
+  .settings-drawer {
+    width: 75vw;
+    min-width: 280px;
+  }
+
+  .resize-handle {
+    display: none;
+  }
+}
+
+/* Handle de redimensionar */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  cursor: ew-resize;
+  background: transparent;
+  z-index: 10;
+  transition: background 0.2s ease;
+}
+
+.resize-handle:hover {
+  background: var(--primary);
+  opacity: 0.6;
+}
+
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 8px;
+  height: 100%;
+}
+/* Ocultar visualmente la scrollbar pero mantener el scroll */
+.settings-drawer::-webkit-scrollbar { width: 0; height: 0; }
+/* Espaciador inferior para permitir ver el final del contenido */
+.settings-drawer::after {
+  content: '';
+  display: block;
+  height: 60px;
+  flex: 0 0 auto;
+}
+@keyframes slideInDrawer {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.settings-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.settings-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 60%, var(--primary-alt) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+}
+.settings-email {
+  color: var(--text-alt);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  word-break: break-all;
+}
+.settings-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.settings-option {
+  background: var(--bg-panel-alt);
+  color: var(--text);
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  font-size: 1.08rem;
+  text-align: left;
+  cursor: pointer;
+  transition: none;
+}
+.settings-option:hover { background: var(--bg-panel-alt); }
+.settings-option.logout {
+  background: var(--danger) !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+.settings-option.logout:hover {
+  background: #e22a2a !important;
+}
+
+/* --- Animación de cierre del drawer de ajustes --- */
+.settings-drawer.closing {
+  animation: slideOutDrawer 0.3s cubic-bezier(.4,1.2,.6,1) 1 forwards;
+}
+@keyframes slideOutDrawer {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+.settings-drawer-overlay.closing {
+  background: rgba(0,0,0,0);
+  transition: background 0.3s;
+}
+
+body.theme-black .top-bar {
+  background: #151515;
+}
+
+body.theme-black .settings-option:hover { background: #151414; }
+body.theme-original .settings-option:hover { background: var(--bg-panel-alt); }
+body.theme-light .settings-option:hover { background: #e9e0d1; }
+
+body.theme-light .close-btn {
+  color: #18181b;
+}
+
+/* Chips de workspaces - Comentado para evitar conflictos con ChatHistory.css */
+/*
+.workspaces-chips-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 0 16px;
+  flex-wrap: wrap;
+}
+*/
+
+.workspace-chip-container {
+  display: flex;
+  align-items: center;
+  background: #23272f;
+  color: #34e335;
+  border-radius: 16px;
+  padding: 4px 4px 4px 14px;
+  font-size: 14px;
+  border: 1px solid #2e3748;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.workspace-chip-container.selected {
+  background: #34e335;
+  color: #181c23;
+  border: 1.5px solid #34e335;
+  font-weight: bold;
+}
+
+.workspace-chip {
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.workspace-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.workspace-chip-container:hover .workspace-actions {
+  opacity: 1;
+}
+
+.workspace-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.workspace-action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.workspace-action-btn.edit-btn:hover {
+  background: rgba(255, 193, 7, 0.2);
+}
+
+.workspace-action-btn.delete-btn:hover {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.new-workspace-btn {
+  background: none;
+  color: #34e335;
+  border: none;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.new-workspace-btn:hover {
+  background: #34e33522;
+  color: #34e335;
+}
+
+.new-conversation-btn {
+  background: none;
+  color: #34e335;
+  border: none;
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.new-conversation-btn:hover {
+  background: #34e33522;
+  color: #34e335;
+}
+
+/* --- Drawer lateral para historial --- */
+.history-drawer-overlay {
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-start;
+  transition: background 0.3s;
+}
+.history-drawer {
+  background: var(--bg-panel-alt);
+  width: 75vw;
+  max-width: 400px;
+  height: 100vh;
+  box-shadow: 2px 0 16px 0 rgba(0,0,0,0.18);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0.5rem calc(1rem + 2px) 0.5rem; /* pequeño margen extra al final */
+  animation: slideInDrawerLeft 0.3s cubic-bezier(.4,1.2,.6,1) 1;
+  overflow-y: auto; /* permitir scroll interno */
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+/* Ocultar visualmente la scrollbar pero mantener el scroll */
+.history-drawer::-webkit-scrollbar { width: 0; height: 0; }
+/* Pequeño espaciador inferior para que no corte el último item */
+.history-drawer::after {
+  content: '';
+  display: block;
+  height: 22px;
+  flex: 0 0 auto;
+}
+@keyframes slideInDrawerLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Animación de cierre */
+.history-drawer.closing {
+  animation: slideOutDrawerLeft 0.3s cubic-bezier(.4,1.2,.6,1) 1 forwards;
+}
+@keyframes slideOutDrawerLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+.history-drawer-overlay.closing {
+  background: rgba(0,0,0,0);
+  transition: background 0.3s;
+}
+
+/* --- MODO LIGHT: Top-bar y barra de input gris claro --- */
+body.theme-light .top-bar {
+  background: #e9e0d1 !important;
+  border-bottom: 1px solid #e5ded6;
+}
+body.theme-light .fancy-input-bar {
+  background: #e9e0d1 !important;
+}
+body.theme-light .fancy-input-bar .icon-btn {
+  background: #d2bfa3 !important;
+}
+body.theme-light .fancy-input-bar input[type="text"] {
+  background: #fff !important;
+  color: #5a4633 !important;
+}
+body.theme-light .fancy-input-bar .message-input {
+  background: #fff !important;
+  color: #5a4633 !important;
+}
+/* Interfaz integrada del micrófono en la barra principal */
+.mic-recording-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.mic-recording-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.mic-processing-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 0;
+  justify-content: center;
+}
+
+.processing-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.audio-control-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.audio-control-btn.delete-btn {
+  background: transparent;
+}
+
+.audio-control-btn.delete-btn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.audio-control-btn.pause-btn {
+  background: transparent;
+  margin-left: 8px;
+  margin-right: -30px;
+}
+
+.audio-control-btn.pause-btn img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.recording-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 50px;
+  flex-shrink: 0;
+}
+
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recording-dot {
+  width: 6px;
+  height: 6px;
+  background: #ff3b3b;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 59, 59, 0.7);
+  animation: pulseGlow 1s infinite;
+  position: relative;
+  top: 0px;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 6px rgba(255, 59, 59, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(255, 59, 59, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 6px rgba(255, 59, 59, 0.7);
+  }
+}
+
+.recording-time {
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: monospace;
+  min-width: 35px;
+}
+
+.audio-waveform {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 32px;
+  flex: 1;
+  justify-content: center;
+  padding: 0 8px;
+  margin-left: 20px;
+}
+
+.audio-waveform.paused .wave-bar {
+  animation-play-state: paused;
+}
+
+.wave-bar {
+  width: 5px;
+  background: #666;
+  border-radius: 2px;
+  animation: waveAnimation 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes waveAnimation {
+  0% {
+    transform: scaleY(0.3);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+body.theme-black .settings-window,
+body.theme-black .settings-drawer {
+  background: #151414 !important;
+}
+body.theme-black .settings-option,
+body.theme-black .settings-window .settings-email,
+body.theme-black .settings-window .settings-options {
+  background: transparent !important;
+}
+body.theme-black .settings-option:hover,
+body.theme-black .settings-window .settings-email:hover,
+body.theme-black .settings-window .settings-options:hover {
+  background: transparent !important;
+}
+
+/* Excepción para el botón de logout en tema black */
+body.theme-black .settings-option.logout {
+  background: var(--danger) !important;
+  color: #fff !important;
+}
+body.theme-black .settings-option.logout:hover {
+  background: #e22a2a !important;
+}
+/* ===============================================
+   🎨 DROPDOWN MODERNO PARA MODELOS
+   =============================================== */
+
+.custom-dropdown {
+  position: relative;
+  z-index: 20;
+}
+
+.dropdown-trigger {
+  width: 100%;
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dropdown-trigger:hover:not(.disabled) {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 200, 81, 0.15);
+  transform: translateY(-1px);
+}
+
+.dropdown-trigger.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dropdown-text {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-arrow {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Menu desplegable */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-option {
+  width: 100%;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.dropdown-option:hover {
+  background: var(--bg-panel-alt);
+  color: var(--primary);
+}
+
+.dropdown-option.selected {
+  background: linear-gradient(90deg, var(--primary), #34d058);
+  color: white;
+}
+
+.dropdown-option.selected:hover {
+  background: linear-gradient(90deg, var(--primary-alt), var(--primary));
+}
+
+.option-text {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.option-check {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+/* Descripción del modelo seleccionado */
+.model-description {
+  color: var(--text-alt);
+  font-weight: 500;
+  padding: 4px 0;
+  border-left: 3px solid var(--primary);
+  padding-left: 8px;
+  margin-left: 0px;
+}
+
+/* Temas para dropdown moderno */
+body.theme-black .dropdown-trigger {
+  background: #151414;
+  border-color: #333;
+}
+
+body.theme-black .dropdown-trigger:hover:not(.disabled) {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 200, 81, 0.2);
+}
+
+body.theme-black .dropdown-menu {
+  background: #151414;
+  border-color: #333;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-black .dropdown-option:hover {
+  background: #222;
+}
+
+body.theme-light .dropdown-trigger {
+  background: #fff;
+  border-color: #d1d5da;
+  color: #24292e;
+}
+
+body.theme-light .dropdown-menu {
+  background: #fff;
+  border-color: #d1d5da;
+}
+
+body.theme-light .dropdown-option {
+  color: #24292e;
+}
+
+body.theme-light .dropdown-option:hover {
+  background: #f6f8fa;
+}
+
+/* Estilos legacy para compatibilidad */
+body.theme-black .settings-window select {
+  background: #151414 !important;
+  color: #fff !important;
+  border: 1px solid #23201c !important;
+}
+body.theme-black .settings-window select:hover,
+body.theme-black .settings-window select:focus {
+  background: #23201c !important;
+  border-color: var(--primary) !important;
+}
+
+/* ===============================================
+   🎨 CHIP DE DESCARGA DE ARCHIVO - SKANEA STYLE
+   =============================================== */
+
+.file-attachment {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 22px; /* Espacio entre icono, texto y botón */
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
+  background: var(--bg-panel-alt);
+  /* Ajustar ancho para que no sea tan ancho en pantalla completa */
+  width: fit-content;
+  max-width: min(600px, 90%); /* Máximo 600px o 90% del contenedor */
+  min-width: 280px; /* Mínimo para que no sea muy pequeño */
+}
+
+.file-attachment:hover {
+  background: var(--bg-panel);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 200, 81, 0.15);
+}
+
+.file-attachment .file-icon {
+  font-size: 24px;
+  color: var(--primary);
+  min-width: 24px;
+  margin-right: -10px; /* Mover el icono más a la derecha (más cerca del texto) */
+}
+
+.file-attachment .file-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.file-attachment .file-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.file-attachment .file-description {
+  font-size: 12px;
+  color: var(--text-alt);
+}
+
+.file-attachment .download-btn {
+  padding: 8px 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.file-attachment .download-btn:hover {
+  background: var(--primary-alt);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 200, 81, 0.3);
+}
+
+.file-attachment .download-btn:active {
+  transform: translateY(0);
+}
+
+/* Tema light - fondo blanco limpio */
+body.theme-light .file-attachment {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+body.theme-light .file-attachment:hover {
+  background: #f8fffe;
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 200, 81, 0.08);
+}
+
+/* ===============================================
+   🖼️ ESTILOS PARA IMÁGENES GENERADAS
+   =============================================== */
+
+.image-attachment {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.image-preview {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-panel);
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.image-preview:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 200, 81, 0.15);
+}
+
+.blurred-image {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.image-info {
+  text-align: center;
+  color: white;
+  padding: 16px;
+}
+
+.image-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.image-details {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.download-btn.image-download {
+  background: linear-gradient(135deg, var(--primary), var(--primary-alt));
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  min-width: auto;
+  align-self: flex-end;
+  box-shadow: 0 4px 15px rgba(0, 200, 81, 0.2);
+}
+
+.download-btn.image-download:hover {
+  background: linear-gradient(135deg, var(--primary-alt), var(--primary));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 200, 81, 0.3);
+}
+
+/* Tema light - ajustes para imágenes */
+body.theme-light .image-preview {
+  background: #ffffff;
+  border-color: #e0e0e0;
+}
+
+body.theme-light .image-preview:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 25px rgba(0, 200, 81, 0.08);
+}
+
+.message.bot .sk-h1,
+.message.assistant .sk-h1 {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 10px 0 6px 0;
+  color: var(--text);
+}
+
+.message.bot .sk-h2,
+.message.assistant .sk-h2 {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 8px 0 5px 0;
+  color: var(--text);
+}
+
+.message.bot .sk-h3,
+.message.assistant .sk-h3 {
+  display: block;
+  font-size: 1.07rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 6px 0 4px 0;
+  color: var(--text-alt);
+}
+
+/* ===============================================
+   📊 TABLAS MARKDOWN - SKANEA STYLE
+   =============================================== */
+
+.sk-table-wrapper {
+  position: relative;
+  margin: 12px 0;
+}
+
+.sk-table {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 8px 0; /* Reducido para dar espacio al botón */
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border); /* Borde exterior de la tabla */
+}
+
+/* Botón de copiar tabla - mismo estilo que botón de copiar normal */
+.sk-copy-table-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  margin-top: 8px;
+  background: var(--bg-panel); /* Usar color del fondo */
+  color: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+
+.sk-copy-table-btn:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.5); /* Un poco más oscuro al hover */
+  transform: translateY(-1px);
+}
+
+.sk-copy-table-btn:active {
+  transform: translateY(0);
+}
+
+.sk-copy-table-btn.copied {
+  background: rgba(100, 255, 170, 0.18);
+  border: 1px solid rgba(100, 255, 170, 0.35);
+  color: #eafff3;
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 0 8px rgba(52, 227, 53, 0.25);
+}
+
+.sk-copy-table-btn.copied::after {
+  content: ' ✓';
+}
+
+/* Tema light para botón de copiar tabla */
+body.theme-light .sk-copy-table-btn {
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  border: none; /* Sin borde en tema light */
+}
+
+body.theme-light .sk-copy-table-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+}
+
+/* Tema original: mantener el mismo fondo en hover para botón de copiar tabla */
+body.theme-original .sk-copy-table-btn:hover {
+  background: #181a20; /* Mismo color del fondo del tema original */
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.sk-table thead {
+  background: var(--primary);
+  color: white;
+}
+
+.sk-table th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap; /* Evitar que los encabezados se rompan en múltiples líneas */
+  min-width: fit-content;
+  border-right: 1px solid rgba(255, 255, 255, 0.2); /* Borde vertical entre encabezados */
+}
+
+.sk-table th:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.2); /* Borde izquierdo de la primera columna */
+}
+
+.sk-table th:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.2); /* Borde derecho de la última columna */
+}
+
+.sk-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border); /* Borde vertical entre celdas */
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.3; /* Reducir interlineado para bullets más compactos */
+}
+
+.sk-table td:first-child {
+  border-left: 1px solid var(--border); /* Borde izquierdo de la primera columna */
+}
+
+.sk-table td:last-child {
+  border-right: 1px solid var(--border); /* Borde derecho de la última columna */
+}
+
+.sk-table tbody tr:hover {
+  background: var(--bg-panel);
+}
+
+.sk-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Tema light */
+body.theme-light .sk-table {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+body.theme-light .sk-table td {
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+body.theme-light .sk-table td:first-child {
+  border-left: 1px solid #e0e0e0;
+}
+
+body.theme-light .sk-table td:last-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+body.theme-light .sk-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* Toggle Switch para configuraciones */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #4a4a4a;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #34e335;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+}
+
+/* Tema light */
+body.theme-light .toggle-slider {
+  background-color: #ccc;
+}
+
+body.theme-light .toggle-switch input:checked + .toggle-slider {
+  background-color: #34e335;
+}

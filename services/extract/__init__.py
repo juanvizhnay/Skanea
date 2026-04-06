@@ -1,0 +1,1 @@
+# Módulo de extracción de contenido de documentos para Skanea

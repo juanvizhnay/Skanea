@@ -1,0 +1,46 @@
+{
+  "name": "mi-backend-ia",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@fal-ai/serverless-client": "^0.15.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "csv-writer": "^1.6.0",
+    "docx": "^9.5.1",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "ffmpeg-static": "^5.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.2",
+    "multer": "^2.0.2",
+    "node-fetch": "^3.3.2",
+    "officegen": "^0.6.5",
+    "pdfkit": "^0.17.1",
+    "pg": "^8.16.3",
+    "redis": "^5.5.6",
+    "resend": "^6.0.3",
+    "sharp": "^0.34.3",
+    "stripe": "^18.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elrbx233/mi-backend-ia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elrbx233/mi-backend-ia/issues"
+  },
+  "homepage": "https://github.com/elrbx233/mi-backend-ia#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "skanea-frontend-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend web de Skanea: landing, login, registro, planes, descargas, etc.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.6.0",
+    "vite": "^7.1.5"
+  }
+}

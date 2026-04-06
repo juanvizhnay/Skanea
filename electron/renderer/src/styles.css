@@ -1,0 +1,33 @@
+:root {
+	--bg: #0b0f14;
+	--card: #111723;
+	--text: #e6eefc;
+	--muted: #9fb0c8;
+	--primary: #4cb1ff;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
+
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+h1 { margin: 0 0 16px; font-size: 24px; }
+
+.dropzone { border: 2px dashed #28415f; border-radius: 12px; padding: 32px; text-align: center; background: var(--card); color: var(--muted); cursor: pointer; }
+.dropzone.dragging { border-color: var(--primary); color: var(--text); }
+
+.progress { position: relative; height: 14px; background: #20324a; border-radius: 8px; margin: 16px 0; }
+.progress .bar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--primary); border-radius: 8px; transition: width .2s ease; }
+.progress .label { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #002b4a; font-weight: 700; }
+
+.error { margin-top: 12px; padding: 12px; border-radius: 8px; background: #3a1621; color: #ffb3c1; }
+
+.preview { margin-top: 16px; display: grid; grid-template-columns: 280px 1fr; gap: 16px; }
+.meta { background: var(--card); border-radius: 12px; padding: 16px; line-height: 1.7; }
+.badge { display: inline-block; background: #0a4128; color: #7dffb0; padding: 2px 8px; border-radius: 999px; margin-left: 8px; font-size: 12px; }
+.pages { background: var(--card); border-radius: 12px; padding: 8px; }
+.page { padding: 12px; border-bottom: 1px solid #22344d; }
+.page:last-child { border-bottom: none; }
+.page pre { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background: #0b1220; padding: 12px; border-radius: 8px; color: #cfe3ff; }
+
+

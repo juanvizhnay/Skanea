@@ -1,0 +1,6 @@
+FROM llama3.2:1b-instruct-q4_0
+PARAMETER num_ctx 768
+PARAMETER num_predict 128
+PARAMETER num_batch 128
+PARAMETER temperature 0.2
+PARAMETER num_gpu 999

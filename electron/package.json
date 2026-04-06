@@ -1,0 +1,47 @@
+{
+	"name": "skanea-desktop",
+	"private": true,
+	"version": "0.1.0",
+    "type": "commonjs",
+    "main": "dist/main/main.js",
+	"scripts": {
+    "dev": "concurrently -k \"tsc -p tsconfig.main.json --watch\" \"vite --config vite.config.ts\" \"wait-on tcp:5173 && electron .\"",
+		"build:renderer": "vite build --config vite.config.ts",
+		"build:main": "tsc -p tsconfig.main.json",
+		"build": "npm run build:renderer && npm run build:main",
+		"start": "electron .",
+		"dist": "npm run build && electron-builder -w"
+	},
+    "devDependencies": {
+		"@types/node": "^20.12.12",
+		"@types/react": "^18.2.66",
+		"@types/react-dom": "^18.2.22",
+		"concurrently": "^8.2.2",
+		"electron": "^31.2.0",
+        "@vitejs/plugin-react": "^4.3.1",
+		"typescript": "^5.5.4",
+		"vite": "^5.3.1",
+		"wait-on": "^7.2.0",
+		"electron-builder": "^24.6.4"
+	},
+	"dependencies": {
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"build": {
+		"appId": "com.skanea.desktop",
+		"asar": true,
+		"files": [
+			"dist/main/**",
+			"dist/renderer/**",
+			"main/**",
+			"renderer/**",
+			"package.json"
+		],
+		"extraResources": [
+			{ "from": "../dist/skanea-extract.exe", "to": "server/skanea-extract.exe" }
+		]
+	}
+}
+
+

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Skanea",
+  "description": "Extensión de inteligencia artificial personalizada",
+  "version": "1.0",
+  "permissions": ["storage", "activeTab", "scripting", "system.display"],
+  "action": {
+    "default_icon": {
+      "16": "resources/icon.png",
+      "48": "resources/icon.png",
+      "128": "resources/icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "resources/icon.png",
+    "48": "resources/icon.png",
+    "128": "resources/icon.png"
+  }
+}

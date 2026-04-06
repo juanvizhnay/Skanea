@@ -1,0 +1,52 @@
+{
+    "name": "skanea",
+    "version": "1.0.0",
+    "main": "electron/main.js",
+    "scripts": {
+        "start": "electron .",
+        "dev": "concurrently \"npm run dev:vite\" \"wait-on http://localhost:5173 && npm run dev:electron\"",
+        "dev:vite": "cd app && npm run dev",
+        "dev:electron": "cross-env NODE_ENV=development electron .",
+        "dev:simple": "npm run dev:vite & timeout 3 && npm run dev:electron",
+        "build": "npm run build:vite && npm run build:electron",
+        "build:vite": "cd app && npm run build",
+        "build:electron": "electron-builder",
+        "install:frontend": "cd app && npm install"
+    },
+    "devDependencies": {
+        "concurrently": "^3.5.1",
+        "cross-env": "^7.0.3",
+        "electron": "^38.0.0",
+        "electron-builder": "^19.24.4",
+        "wait-on": "^8.0.1"
+    },
+    "build": {
+        "appId": "com.skanea.app",
+        "productName": "Skanea",
+        "directories": {
+            "output": "dist-electron"
+        },
+        "files": [
+            "app/dist/**/*",
+            "electron/main.js",
+            "electron/preload.js",
+            "electron/resources/**/*"
+        ],
+        "mac": {
+            "category": "public.app-category.productivity"
+        },
+        "win": {
+            "target": "nsis"
+        },
+        "linux": {
+            "target": "AppImage"
+        }
+    },
+    "dependencies": {
+        "@tensorflow-models/speech-commands": "^0.5.4",
+        "@tensorflow/tfjs": "^2.1.0",
+        "react-speech-recognition": "^4.0.1",
+        "redis": "^5.5.6",
+        "resend": "^4.6.0"
+    }
+}
