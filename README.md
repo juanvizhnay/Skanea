@@ -1,78 +1,78 @@
 # Skanea
 
-Asistente de escritorio con IA, migrado desde una extension de Chrome a una aplicacion Electron de escritorio. Integra chat con multiples proveedores de IA, OCR avanzado para extraccion de texto/imagenes, generacion y exportacion de documentos, busqueda web, transcripcion de voz, y conectores con servicios externos como Google Drive.
+AI desktop assistant migrated from a Chrome extension to an Electron desktop application. It integrates chat with multiple AI providers, advanced OCR for text and image extraction, document generation and export, web search, voice transcription, and connectors for external services such as Google Drive.
 
-## Estructura del Proyecto
+## Project Structure
 
-```
+```text
 Skanea/
-├── app/                    # Frontend (React + Vite)
-│   ├── src/
-│   │   └── popup/          # Componentes principales (Chat, Settings, etc.)
-│   ├── manifest.json
-│   └── vite.config.js
-├── backend/                # API del servidor (Node.js + Express)
-│   ├── server.js           # Servidor principal con deteccion de intenciones
-│   ├── routes/             # Rutas de la API
-│   ├── controllers/        # Controladores
-│   ├── services/           # Servicios (AI, exportacion, imagenes, whisper, etc.)
-│   │   ├── ai/             # Router de proveedores de IA
-│   │   └── models/         # Gestion de modelos
-│   ├── models/             # Modelos de datos (MongoDB/Postgres)
-│   ├── middleware/          # Autenticacion, proteccion de signup
-│   ├── config/             # Configuracion de MongoDB, Redis
-│   └── utils/              # Utilidades (crypto, rate limit, etc.)
-├── electron/               # Shell de Electron
-│   ├── main.js             # Proceso principal
-│   ├── preload.js          # Script de precarga
-│   └── server-runner.js    # Runner del servidor backend
-├── services/
-│   └── extract/            # Servicio de OCR y extraccion (Python/FastAPI)
-│       ├── app.py          # API FastAPI
-│       ├── ocr.py          # OCR principal con heuristicas multinivel
-│       ├── math_ocr.py     # OCR especializado en matematicas
-│       ├── fallback_ocr.py # OCR de respaldo con deteccion adaptativa
-│       ├── pdf_extract.py  # Extraccion de texto de PDFs
-│       └── cache.py        # Cache de resultados OCR
-└── package.json            # Dependencias raiz y scripts de Electron
+|-- app/                    # Frontend (React + Vite)
+|   |-- src/
+|   |   `-- popup/          # Main components (Chat, Settings, etc.)
+|   |-- manifest.json
+|   `-- vite.config.js
+|-- backend/                # Server API (Node.js + Express)
+|   |-- server.js           # Main server with intent detection
+|   |-- routes/             # API routes
+|   |-- controllers/        # Controllers
+|   |-- services/           # Services (AI, export, images, Whisper, etc.)
+|   |   |-- ai/             # AI provider router
+|   |   `-- models/         # Model management
+|   |-- models/             # Data models (MongoDB/Postgres)
+|   |-- middleware/         # Authentication, signup protection
+|   |-- config/             # MongoDB and Redis configuration
+|   `-- utils/              # Utilities (crypto, rate limiting, etc.)
+|-- electron/               # Electron shell
+|   |-- main.js             # Main process
+|   |-- preload.js          # Preload script
+|   `-- server-runner.js    # Backend server runner
+|-- services/
+|   `-- extract/            # OCR and extraction service (Python/FastAPI)
+|       |-- app.py          # FastAPI API
+|       |-- ocr.py          # Main OCR with multi-level heuristics
+|       |-- math_ocr.py     # OCR specialized for mathematics
+|       |-- fallback_ocr.py # Fallback OCR with adaptive detection
+|       |-- pdf_extract.py  # PDF text extraction
+|       `-- cache.py        # OCR results cache
+`-- package.json            # Root dependencies and Electron scripts
 ```
 
-## Requisitos Previos
+## Prerequisites
 
 - **Node.js** >= 18
-- **Python** >= 3.12 (para el servicio de extraccion/OCR)
-- **MongoDB** (local o Atlas)
-- **PostgreSQL** (para datos relacionales)
-- **Redis** (local o Redis Cloud)
-- **Tesseract OCR** instalado en el sistema (requerido por `pytesseract`)
+- **Python** >= 3.12 (for the extraction/OCR service)
+- **MongoDB** (local or Atlas)
+- **PostgreSQL** (for relational data)
+- **Redis** (local or Redis Cloud)
+- **Tesseract OCR** installed on the system (required by `pytesseract`)
 
-### Dependencias externas opcionales
+### Optional External Dependencies
 
-- **whisper.cpp**: Binarios precompilados para transcripcion de audio. Descargar desde [whisper.cpp releases](https://github.com/ggerganov/whisper.cpp/releases) y colocar en `backend/whisper-binaries/`.
-- **PaddleOCR ONNX**: Modelos ONNX para OCR avanzado. Clonar [PaddleOCRv3-ONNX-Sample](https://github.com/nicklgw/PaddleOCRv3-ONNX-Sample) en la raiz del proyecto como `PaddleOCRv3-ONNX-Sample-main/`.
+- **whisper.cpp**: Precompiled binaries for audio transcription. Download them from [whisper.cpp releases](https://github.com/ggerganov/whisper.cpp/releases) and place them in `backend/whisper-binaries/`.
+- **PaddleOCR ONNX**: ONNX models for advanced OCR. Clone [PaddleOCRv3-ONNX-Sample](https://github.com/nicklgw/PaddleOCRv3-ONNX-Sample) into the project root as `PaddleOCRv3-ONNX-Sample-main/`.
 
-## Instalacion
+## Installation
 
-### 1. Dependencias del proyecto principal (Electron)
+### 1. Main Project Dependencies (Electron)
 
 ```bash
 npm install
 ```
 
-### 2. Dependencias del frontend
+### 2. Frontend Dependencies
 
 ```bash
 npm run install:frontend
 ```
 
-### 3. Dependencias del backend
+### 3. Backend Dependencies
 
 ```bash
 cd backend
 npm install
 ```
 
-### 4. Servicio de extraccion (Python)
+### 4. Extraction Service (Python)
 
 ```bash
 cd services/extract
@@ -85,69 +85,70 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5. Variables de entorno
+### 5. Environment Variables
 
-Copiar el archivo de ejemplo y completar con tus credenciales:
+Copy the example file and fill it in with your credentials:
 
 ```bash
 cp backend/.env.example backend/.env
 ```
 
-Editar `backend/.env` con tus claves de API (OpenAI, MongoDB, Redis, etc.).
+Edit `backend/.env` with your API keys and service credentials (OpenAI, MongoDB, Redis, etc.).
 
-## Desarrollo
+## Development
 
-Para ejecutar la aplicacion en modo desarrollo:
+To run the application in development mode:
 
 ```bash
 npm run dev
 ```
 
-Esto iniciara:
-- El servidor de desarrollo de Vite en `http://localhost:5173`
-- La aplicacion Electron conectada al servidor de desarrollo
+This will start:
 
-Para iniciar el servidor backend por separado:
+- The Vite development server at `http://localhost:5173`
+- The Electron application connected to the development server
+
+To start the backend server separately:
 
 ```bash
 cd backend
 node server.js
 ```
 
-Para iniciar el servicio de extraccion OCR:
+To start the OCR extraction service:
 
 ```bash
 cd services/extract
 uvicorn app:app --host 0.0.0.0 --port 8100
 ```
 
-## Construccion
+## Build
 
-Para construir la aplicacion para distribucion:
+To build the application for distribution:
 
 ```bash
 npm run build
 ```
 
-Genera los archivos de produccion en `dist-electron/`.
+This generates the production files in `dist-electron/`.
 
-## Funcionalidades
+## Features
 
-- Chat con multiples proveedores de IA (OpenAI, modelos locales via Ollama, FAL)
-- Deteccion inteligente de intenciones del usuario en mensajes
-- OCR multinivel con heuristicas avanzadas (texto, matematicas, formulas)
-- Extraccion de texto desde PDFs, DOCX, PPTX, XLSX, CSV
-- Generacion y exportacion de documentos (PDF, DOCX, PPTX, XLSX, CSV, TXT)
-- Generacion de imagenes con IA
-- Transcripcion de audio con Whisper
-- Busqueda web integrada (Google Custom Search)
-- Conectores con Google Drive (subida/descarga de archivos)
-- Historial de conversaciones persistente
-- Workspaces para organizar conversaciones
-- Autenticacion con JWT y Google OAuth
-- Interfaz responsive con tema oscuro
-- Reconocimiento de voz para entrada de texto
+- Chat with multiple AI providers (OpenAI, local models via Ollama, FAL)
+- Intelligent user intent detection in messages
+- Multi-level OCR with advanced heuristics (text, mathematics, formulas)
+- Text extraction from PDFs, DOCX, PPTX, XLSX, and CSV files
+- Document generation and export (PDF, DOCX, PPTX, XLSX, CSV, TXT)
+- AI image generation
+- Audio transcription with Whisper
+- Integrated web search (Google Custom Search)
+- Google Drive connectors (file upload/download)
+- Persistent conversation history
+- Workspaces for organizing conversations
+- Authentication with JWT and Google OAuth
+- Responsive interface with dark theme
+- Voice recognition for text input
 
-## Estado del Proyecto
+## Project Status
 
-Este proyecto se encuentra en desarrollo activo (~80% de funcionalidades completadas). Algunas caracteristicas pueden estar parcialmente implementadas o en proceso de mejora.
+This project is in active development (~80% of features completed). Some features may be partially implemented or still being improved.
